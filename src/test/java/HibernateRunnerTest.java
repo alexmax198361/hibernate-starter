@@ -3,15 +3,20 @@ import org.junit.jupiter.api.Test;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
+import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static java.util.Arrays.stream;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.joining;
 
 class HibernateRunnerTest {
 
     @Test
-    public void checkAnatation() throws NoSuchFieldException {
+    public void checkAnatation() throws IllegalAccessException, SQLException {
         User user = User.builder()
                 .username("ivan@gmail.com")
                 .firstName("Ivan")
@@ -26,14 +31,22 @@ class HibernateRunnerTest {
                 VALUES
                 (%s)
                 """;
-        String tableName = Optional.ofNullable(user.getClass().getAnnotation(Table.class))
+        String tableName = ofNullable(user.getClass().getAnnotation(Table.class))
                 .map(table -> table.schema() + "." + table.name()).orElse(user.getClass().getName());
-        String columns = Arrays.stream(user.getClass().getDeclaredFields()).map(
+        String columns = stream(user.getClass().getDeclaredFields()).map(
                 field -> field.isAnnotationPresent(Column.class) ?
                         field.getAnnotation(Column.class).name() : field.getName()
-        ).collect(Collectors.joining(", "));
-        System.out.println("");
+        ).collect(joining(", "));
 
+        String columnValues = stream(user.getClass().getDeclaredFields())
+                .map(field -> "?").collect(joining(", "));
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = connection.prepareStatement(sql.formatted(tableName, columns, columnValues));
+        for (Field field : user.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            preparedStatement.setObject(1, field.get(user));
+        }
     }
 
 }

@@ -1,13 +1,10 @@
 package entity;
 
-
+import converter.BirthDayConverter;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.time.LocalDate;
+import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
@@ -21,7 +18,12 @@ public class User {
     private String username;
     private String firstName;
     private String lastName;
-    private LocalDate birthday;
-    private Integer age;
+    @Convert(converter = BirthDayConverter.class)
+    private BirthDay birthday;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+    @Type(type = "jsonb")
+    private String info;
+
 
 }
