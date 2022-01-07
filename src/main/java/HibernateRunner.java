@@ -1,38 +1,41 @@
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import converter.BirthDayConverter;
-import entity.BirthDay;
-import entity.Role;
 import entity.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-
-import java.time.LocalDate;
+import util.HibernateUtil;
 
 public class HibernateRunner {
 
     public static void main(String[] args) {
-        Configuration configuration = new Configuration();
-        configuration.addAttributeConverter(new BirthDayConverter(), true);
-        configuration.registerTypeOverride(new JsonBinaryType());
-        configuration.configure();
-        try (SessionFactory sessionFactory = configuration.buildSessionFactory(); Session session = sessionFactory.openSession()) {
-            session.getTransaction().begin();
-            User user = User.builder()
-                    .username("ivan123@gmail.com")
-                    .firstName("Ivan")
-                    .lastName("Ivanov")
-                    .role(Role.ADMIN)
-                    .birthday(new BirthDay(LocalDate.of(2011, 1, 1)))
-                    .info("""
-                            {
-                                "name": "Alex",
-                                "lastname": "Sazanovich"
-                            }
-                            """)
-                    .build();
-            session.save(user);
-            session.getTransaction().commit();
+
+        User user = User.builder()
+                .username("test@test.ru")
+                .firstName("test")
+                .lastName("test")
+                .build();
+
+        try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory()) {
+            try (Session sessionOne = sessionFactory.openSession()) {
+                /**
+                 * В первой сессии сохраняем пользователя
+                 * получаем два раза, убеждаемся, что происходит один раз select
+                 * сетаем поле и делаем снова get
+                 */
+                sessionOne.getTransaction().begin();
+                sessionOne.saveOrUpdate(user);
+                User getUserOneWithoutUpdate = sessionOne.get(User.class, "test@test.ru");
+                user.setFirstName("test2");
+
+                user.setFirstName("test3");
+                sessionOne.getTransaction().commit();
+
+
+                System.out.println("");
+            }
+            try (Session sessionTwo = sessionFactory.openSession()) {
+                sessionTwo.getTransaction().begin();
+                User getUserOneWithoutUpdate = sessionTwo.get(User.class, "test@test.ru");
+                sessionTwo.getTransaction().commit();
+            }
 
 
         }
