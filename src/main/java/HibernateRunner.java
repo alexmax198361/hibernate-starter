@@ -9,7 +9,7 @@ public class HibernateRunner {
 
     public static void main(String[] args) {
         User newUser = User.builder()
-                .username("test@test.com")
+                .username("test12123123123123@test.com")
                 .role(Role.ADMIN)
                 .personalInfo(PersonalInfo.builder()
                         .firstName("Alex")
@@ -20,7 +20,7 @@ public class HibernateRunner {
             try (Session sessionOne = sessionFactory.openSession()) {
                 sessionOne.getTransaction().begin();
                 sessionOne.saveOrUpdate(newUser);
-                User user = sessionOne.get(User.class, "test@test.ru");
+//                User user = sessionOne.get(User.class, "test@test.ru");
                 sessionOne.getTransaction().commit();
 
 
