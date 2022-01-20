@@ -11,6 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @Entity
+@ToString(exclude = "company")
 @Table(name = "users")
 public class User {
 
@@ -28,5 +29,9 @@ public class User {
     private String info;
 
     private PersonalInfo personalInfo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
 
 }

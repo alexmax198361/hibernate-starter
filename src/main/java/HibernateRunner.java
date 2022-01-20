@@ -1,4 +1,4 @@
-import entity.PersonalInfo;
+import entity.Company;
 import entity.Role;
 import entity.User;
 import org.hibernate.Session;
@@ -8,27 +8,25 @@ import util.HibernateUtil;
 public class HibernateRunner {
 
     public static void main(String[] args) {
-        User newUser = User.builder()
-                .username("test12123123123123@test.com")
-                .role(Role.ADMIN)
-                .personalInfo(PersonalInfo.builder()
-                        .firstName("Alex")
-                        .lastName("Sazanovich")
-                        .build())
+        // создаем сущности
+
+        var company = Company.builder()
+                .name("Google")
                 .build();
-        try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory()) {
-            try (Session sessionOne = sessionFactory.openSession()) {
-                sessionOne.getTransaction().begin();
-                sessionOne.saveOrUpdate(newUser);
-//                User user = sessionOne.get(User.class, "test@test.ru");
-                sessionOne.getTransaction().commit();
+        var user = User.builder()
+                .role(Role.ADMIN)
+                .username("test@test.com")
+                .company(company)
+                .build();
 
+        try (SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+             Session session = sessionFactory.openSession()) {
+            session.getTransaction().begin();
 
-            }
+            User getUser = session.get(User.class, 3L);
 
-
+            session.getTransaction().commit();
         }
-
 
     }
 }

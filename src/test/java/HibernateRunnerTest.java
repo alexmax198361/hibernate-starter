@@ -19,10 +19,6 @@ class HibernateRunnerTest {
     public void checkAnatation() throws IllegalAccessException, SQLException {
         User user = User.builder()
                 .username("ivan@gmail.com")
-                .firstName("Ivan")
-                .lastName("Ivanov")
-                .birthday(LocalDate.of(1982, 1, 23))
-                .age(39)
                 .build();
 
         String sql = """
