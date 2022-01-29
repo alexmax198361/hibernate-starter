@@ -19,13 +19,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, name = "username")
     private String username;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @Type(type = "jsonb")
+    @Column(name = "info")
     private String info;
 
     private PersonalInfo personalInfo;
