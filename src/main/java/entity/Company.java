@@ -1,11 +1,10 @@
 package entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -13,6 +12,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Table
 @Builder
+@EqualsAndHashCode(exclude = "users")
+@ToString(exclude = "users")
 public class Company {
 
     @Id
@@ -21,4 +22,14 @@ public class Company {
 
     @Column(name = "name", unique = true)
     private String name;
+
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<User> users = new HashSet<>();
+
+
+    public void addUser(User user) {
+        users.add(user);
+        user.setCompany(this);
+    }
+
 }

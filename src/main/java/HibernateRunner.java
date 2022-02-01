@@ -23,10 +23,7 @@ public class HibernateRunner {
              Session session = sessionFactory.openSession()) {
             session.getTransaction().begin();
 
-            User getUser = session.get(User.class, 3L);
 
-            session.getTransaction().commit();
         }
-
     }
 }

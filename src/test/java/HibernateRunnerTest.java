@@ -1,5 +1,10 @@
+import entity.Company;
 import entity.User;
+import lombok.Cleanup;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
+import util.HibernateUtil;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
@@ -43,6 +48,17 @@ class HibernateRunnerTest {
             field.setAccessible(true);
             preparedStatement.setObject(1, field.get(user));
         }
+    }
+
+    @Test
+    public void oneToMany() {
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+        session.getTransaction().begin();
+        Company company = session.get(Company.class, 3L);
+        System.out.println("Получили компманию");
+        ;
+        session.getTransaction().commit();
     }
 
 }
