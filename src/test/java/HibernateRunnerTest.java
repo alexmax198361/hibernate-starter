@@ -1,4 +1,6 @@
 import entity.Company;
+import entity.Profile;
+import entity.Role;
 import entity.User;
 import lombok.Cleanup;
 import org.hibernate.Session;
@@ -12,13 +14,33 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 
 class HibernateRunnerTest {
+
+    @Test
+    public void checkOneToOne() {
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+        session.getTransaction().begin();
+        User user = User.builder()
+                .username("a.sazanovich")
+                .role(Role.USER)
+                .build();
+
+        Profile profile = Profile.builder()
+                .street("Партизана Германа")
+                .language("RU")
+                .build();
+        session.save(user);
+        profile.setUser(user);
+
+
+        session.getTransaction().commit();
+    }
 
     @Test
     public void checkAnatation() throws IllegalAccessException, SQLException {

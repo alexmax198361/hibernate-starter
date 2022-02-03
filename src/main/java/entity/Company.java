@@ -23,9 +23,9 @@ public class Company {
     @Column(name = "name", unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
+    @Builder.Default
     private Set<User> users = new HashSet<>();
-
 
     public void addUser(User user) {
         users.add(user);

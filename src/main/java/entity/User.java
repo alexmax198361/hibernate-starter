@@ -35,4 +35,7 @@ public class User {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Profile profile;
+
 }

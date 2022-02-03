@@ -13,5 +13,6 @@
         <property name="format_sql">true</property>
         <mapping class="entity.User"></mapping>
         <mapping class="entity.Company"></mapping>
+        <mapping class="entity.Profile"></mapping>
     </session-factory>
 </hibernate-configuration>
