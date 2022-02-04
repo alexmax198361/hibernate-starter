@@ -1,9 +1,6 @@
 package entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -11,15 +8,17 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "user")
+@EqualsAndHashCode(of = "user")
 @Builder
 public class Profile {
 
     @Id
-    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @PrimaryKeyJoinColumn
+    @OneToOne(optional = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     private String street;
@@ -29,6 +28,5 @@ public class Profile {
     public void setUser(User user) {
         user.setProfile(this);
         this.user = user;
-        this.id = user.getId();
     }
 }

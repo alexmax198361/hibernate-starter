@@ -11,7 +11,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@ToString(exclude = "company")
+@ToString(exclude = {"company", "profile"})
+@EqualsAndHashCode(of = "username")
 @Table(name = "users")
 public class User {
 

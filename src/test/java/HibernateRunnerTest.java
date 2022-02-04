@@ -26,8 +26,8 @@ class HibernateRunnerTest {
         @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
         session.getTransaction().begin();
-        User user = User.builder()
-                .username("a.sazanovich")
+      /*  User user = User.builder()
+                .username("a.sazanovich1")
                 .role(Role.USER)
                 .build();
 
@@ -36,7 +36,10 @@ class HibernateRunnerTest {
                 .language("RU")
                 .build();
         session.save(user);
-        profile.setUser(user);
+
+
+        profile.setUser(user);*/
+        User user = session.get(User.class, 10L);
 
 
         session.getTransaction().commit();
