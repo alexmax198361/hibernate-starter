@@ -1,7 +1,4 @@
-import entity.Company;
-import entity.Profile;
-import entity.Role;
-import entity.User;
+import entity.*;
 import lombok.Cleanup;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,6 +17,34 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 
 class HibernateRunnerTest {
+
+    @Test
+    public void checkManyToMany() {
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+        session.getTransaction().begin();
+
+        Chat chat = Chat.builder()
+                .name("dmdev")
+                .build();
+
+        session.save(chat);
+        Chat chat2 = Chat.builder()
+                .name("dmdevFake")
+                .build();
+
+        session.save(chat2);
+
+        User user = User.builder()
+                .username("testChats")
+                .build();
+        user.addChat(chat);
+        user.addChat(chat2);
+        session.save(user);
+
+
+        session.getTransaction().commit();
+    }
 
     @Test
     public void checkOneToOne() {

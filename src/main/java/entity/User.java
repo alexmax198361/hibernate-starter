@@ -4,6 +4,8 @@ import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Data
@@ -11,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@ToString(exclude = {"company", "profile"})
+@ToString(exclude = {"company", "profile", "chats"})
 @EqualsAndHashCode(of = "username")
 @Table(name = "users")
 public class User {
@@ -38,5 +40,17 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Profile profile;
+
+    @ManyToMany
+    @JoinTable(name = "users_chat",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "chat_id"))
+    @Builder.Default
+    private Set<Chat> chats = new HashSet<>();
+
+    public void addChat(Chat chat) {
+        chat.getUsers().add(this);
+        this.getChats().add(chat);
+    }
 
 }
