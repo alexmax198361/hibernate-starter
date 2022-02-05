@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Entity
-@ToString(exclude = {"company", "profile", "chats"})
+@ToString(exclude = {"company", "profile", "userChats"})
 @EqualsAndHashCode(of = "username")
 @Table(name = "users")
 public class User {
@@ -41,16 +41,8 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Profile profile;
 
-    @ManyToMany
-    @JoinTable(name = "users_chat",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "chat_id"))
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default
-    private Set<Chat> chats = new HashSet<>();
-
-    public void addChat(Chat chat) {
-        chat.getUsers().add(this);
-        this.getChats().add(chat);
-    }
+    private Set<UserChat> userChats = new HashSet<>();
 
 }

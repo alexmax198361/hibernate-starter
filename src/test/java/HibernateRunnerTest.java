@@ -25,21 +25,27 @@ class HibernateRunnerTest {
         session.getTransaction().begin();
 
         Chat chat = Chat.builder()
-                .name("dmdev")
+                .name("dmdev123123")
                 .build();
 
         session.save(chat);
         Chat chat2 = Chat.builder()
-                .name("dmdevFake")
+                .name("dmdevFake123123123")
                 .build();
 
         session.save(chat2);
 
         User user = User.builder()
-                .username("testChats")
+                .username("testChatsOne")
                 .build();
-        user.addChat(chat);
-        user.addChat(chat2);
+        UserChat userChat = new UserChat();
+        userChat.setChat(chat);
+        userChat.setUser(user);
+
+        UserChat userChatTwo = new UserChat();
+        userChatTwo.setChat(chat2);
+        userChatTwo.setUser(user);
+
         session.save(user);
 
 
