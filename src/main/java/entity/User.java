@@ -16,7 +16,7 @@ import java.util.List;
 @ToString(exclude = {"company", "profile", "userChats"})
 @EqualsAndHashCode(of = "username")
 @Table(name = "users")
-public class User {
+public class User implements Comparable<User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,5 +44,13 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default
     private List<UserChat> userChats = new ArrayList<>();
+
+    @Override
+    public int compareTo(User o) {
+        if (personalInfo.getFirstName().compareTo(o.getPersonalInfo().getFirstName()) == 0) {
+            return personalInfo.getBirthday().getBirthDay().compareTo(o.getPersonalInfo().getBirthday().getBirthDay());
+        }
+        return personalInfo.getFirstName().compareTo(o.getPersonalInfo().getFirstName()) > 0 ? -1 : 1;
+    }
 
 }

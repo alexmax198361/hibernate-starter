@@ -1,12 +1,10 @@
 package entity;
 
 import lombok.*;
+import org.hibernate.annotations.SortNatural;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Data
@@ -27,7 +25,9 @@ public class Company {
 
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     @Builder.Default
-    private Set<User> users = new HashSet<>();
+    @SortNatural
+    @MapKeyColumn(name = "username")
+    private Map<String, User> users = new TreeMap<>();
 
     @ElementCollection
     @CollectionTable(name = "company_locale")
@@ -35,7 +35,7 @@ public class Company {
     private List<CompanyLocale> locale = new ArrayList<>();
 
     public void addUser(User user) {
-        users.add(user);
+        users.put(user.getUsername(), user);
         user.setCompany(this);
     }
 

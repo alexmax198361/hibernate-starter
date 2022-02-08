@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Arrays;
 
 import static java.util.Arrays.stream;
@@ -18,6 +19,72 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.joining;
 
 class HibernateRunnerTest {
+
+
+    @Test
+    public void fillDatabase() {
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+        session.getTransaction().begin();
+
+        Company getCompany = session.get(Company.class, 94L);
+        if (getCompany == null) {
+            getCompany = Company.builder()
+                    .name("Google")
+                    .build();
+            getCompany.getLocale().add(CompanyLocale.of("en", "Google"));
+            getCompany.getLocale().add(CompanyLocale.of("ru", "Гугл"));
+            session.persist(getCompany);
+        }
+
+        User userSazanovich = User.builder()
+                .username("sazanovich83av")
+                .role(Role.ADMIN)
+                .build();
+        userSazanovich.setPersonalInfo(PersonalInfo.builder()
+                .lastName("Сазанович")
+                .firstName("Александр")
+                .birthday(new BirthDay(LocalDate.of(1983, 11, 15)))
+                .build());
+
+        User userMandrik = User.builder()
+                .username("lasthero1987")
+                .role(Role.USER)
+                .build();
+
+        userMandrik.setPersonalInfo(PersonalInfo.builder()
+                .lastName("Мандрик")
+                .firstName("Антон")
+                .birthday(new BirthDay(LocalDate.of(1987, 9, 14)))
+                .build());
+
+        User userMinaeva = User.builder()
+                .username("minaevaMarina")
+
+                .personalInfo(PersonalInfo.builder()
+                        .lastName("Минаева")
+                        .firstName("Марина")
+                        .birthday(new BirthDay(LocalDate.of(1997, 7, 20)))
+                        .build())
+                .role(Role.USER)
+                .build();
+        getCompany.addUser(userSazanovich);
+        getCompany.addUser(userMandrik);
+        getCompany.addUser(userMinaeva);
+
+
+        session.getTransaction().commit();
+    }
+
+    @Test
+    public void sortCompany() {
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+        session.getTransaction().begin();
+        Company company = session.get(Company.class, 94L);
+        company.getUsers().forEach((s, user) -> System.out.println(s));
+        session.getTransaction().commit();
+    }
 
     @Test
     public void collectionTableTest() {

@@ -17,8 +17,8 @@ public class HibernateRunner {
         session.getTransaction().begin();
 
         Company company = session.get(Company.class, 93L);
-        Set<User> userSet = Optional.ofNullable(company.getUsers()).filter(users -> !users.isEmpty()).orElse(new HashSet<>());
-        userSet.removeIf(user -> user.getId().equals(6L));
+//        Set<User> userSet = Optional.ofNullable(company.getUsers()).filter(users -> !users.isEmpty()).orElse(new HashSet<>());
+//        userSet.removeIf(user -> user.getId().equals(6L));
         session.merge(company);
         session.getTransaction().commit();
 
