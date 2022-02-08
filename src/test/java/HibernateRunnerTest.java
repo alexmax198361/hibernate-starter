@@ -20,6 +20,17 @@ import static java.util.stream.Collectors.joining;
 
 class HibernateRunnerTest {
 
+    @Test
+    public void createCompanyTest() {
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+        session.getTransaction().begin();
+        Company yandex = Company.builder()
+                .name("Yandex")
+                .build();
+        session.save(yandex);
+        session.getTransaction().commit();
+    }
 
     @Test
     public void fillDatabase() {

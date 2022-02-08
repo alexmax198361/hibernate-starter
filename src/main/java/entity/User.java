@@ -28,9 +28,9 @@ public class User implements Comparable<User> {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Type(type = "jsonb")
-    @Column(name = "info")
-    private String info;
+//    @Type(type = "jsonb")
+//    @Column(name = "info")
+//    private String info;
 
     private PersonalInfo personalInfo;
 
