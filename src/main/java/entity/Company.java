@@ -3,7 +3,9 @@ package entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,6 +28,11 @@ public class Company {
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     @Builder.Default
     private Set<User> users = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(name = "company_locale")
+    @Builder.Default
+    private List<CompanyLocale> locale = new ArrayList<>();
 
     public void addUser(User user) {
         users.add(user);

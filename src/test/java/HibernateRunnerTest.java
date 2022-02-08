@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
@@ -19,32 +20,42 @@ import static java.util.stream.Collectors.joining;
 class HibernateRunnerTest {
 
     @Test
+    public void collectionTableTest() {
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+
+        session.getTransaction().begin();
+        Company company = session.get(Company.class, 93L);
+        CompanyLocale localeEn = CompanyLocale.of("en", "Yandex");
+        CompanyLocale localeRu = CompanyLocale.of("ru", "Яндекс");
+        company.getLocale().addAll(Arrays.asList(localeEn, localeRu));
+
+        session.getTransaction().commit();
+    }
+
+    @Test
+    public void collectionTableRemoveElement() {
+        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup Session session = sessionFactory.openSession();
+
+        session.getTransaction().begin();
+        Company company = session.get(Company.class, 93L);
+        company.getLocale().removeIf(companyLocale -> companyLocale.getLang().equals("en"));
+
+        session.getTransaction().commit();
+    }
+
+    @Test
     public void checkManyToMany() {
         @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
         session.getTransaction().begin();
 
-        Chat chat = Chat.builder()
-                .name("dmdev123123")
-                .build();
-
-        session.save(chat);
-        Chat chat2 = Chat.builder()
-                .name("dmdevFake123123123")
-                .build();
-
-        session.save(chat2);
-
-        User user = User.builder()
-                .username("testChatsOne")
-                .build();
+        User user = session.get(User.class, 15L);
+        Chat chat = session.get(Chat.class, 12L);
         UserChat userChat = new UserChat();
         userChat.setChat(chat);
         userChat.setUser(user);
-
-        UserChat userChatTwo = new UserChat();
-        userChatTwo.setChat(chat2);
-        userChatTwo.setUser(user);
 
         session.save(user);
 
