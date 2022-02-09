@@ -3,6 +3,7 @@ import lombok.Cleanup;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.Test;
+import util.HibernateTestUtil;
 import util.HibernateUtil;
 
 import javax.persistence.Column;
@@ -22,7 +23,7 @@ class HibernateRunnerTest {
 
     @Test
     public void createCompanyTest() {
-        @Cleanup SessionFactory sessionFactory = HibernateUtil.buildSessionFactory();
+        @Cleanup SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
         @Cleanup Session session = sessionFactory.openSession();
         session.getTransaction().begin();
         Company yandex = Company.builder()

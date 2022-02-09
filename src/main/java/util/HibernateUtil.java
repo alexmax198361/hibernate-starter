@@ -11,9 +11,13 @@ public class HibernateUtil {
 
     public static SessionFactory buildSessionFactory() {
         Configuration configuration = new Configuration();
-        configuration.addAttributeConverter(new BirthDayConverter(), true);
-        configuration.registerTypeOverride(new JsonBinaryType());
+        configureProperties(configuration);
         configuration.configure();
         return configuration.buildSessionFactory();
+    }
+
+    public static void configureProperties(Configuration configuration) {
+        configuration.addAttributeConverter(new BirthDayConverter(), true);
+        configuration.registerTypeOverride(new JsonBinaryType());
     }
 }
