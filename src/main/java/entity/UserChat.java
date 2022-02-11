@@ -26,12 +26,6 @@ public class UserChat {
     @ManyToOne
     private Chat chat;
 
-    @Column(name = "create_date")
-    private Instant createDate;
-
-    @Column(name = "create_by")
-    private String createBy;
-
     public void setUser(User user) {
         this.user = user;
         user.getUserChats().add(this);
