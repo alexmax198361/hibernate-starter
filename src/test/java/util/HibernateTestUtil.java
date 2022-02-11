@@ -10,8 +10,14 @@ import static util.HibernateUtil.configureProperties;
 @UtilityClass
 public class HibernateTestUtil {
 
+    /**
+     * Создаем docker контейнер с версией
+     */
     private static final PostgreSQLContainer<?> postrges = new PostgreSQLContainer<>("postgres:13");
 
+    /*
+      При запуске теста стартуем контейнер
+     */
     static {
         postrges.start();
     }

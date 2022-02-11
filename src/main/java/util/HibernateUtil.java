@@ -1,7 +1,7 @@
 package util;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import converter.BirthDayConverter;
+import converter.BirthdayConverter;
 import lombok.experimental.UtilityClass;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -17,7 +17,7 @@ public class HibernateUtil {
     }
 
     public static void configureProperties(Configuration configuration) {
-        configuration.addAttributeConverter(new BirthDayConverter(), true);
+        configuration.addAttributeConverter(new BirthdayConverter(), true);
         configuration.registerTypeOverride(new JsonBinaryType());
     }
 }

@@ -1,55 +1,71 @@
 package entity;
 
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.*;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@NamedQuery(name = "findUserByName", query = "select u from User u " +
+        "left join u.company c " +
+        "where u.personalInfo.firstName = :firstname and c.name = :companyName " +
+        "order by u.personalInfo.lastName desc")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@ToString(exclude = {"company", "profile", "userChats"})
+@AllArgsConstructor
 @EqualsAndHashCode(of = "username")
-@Table(name = "users")
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User implements Comparable<User> {
+@ToString(exclude = {"company", "profile", "userChats", "payments"})
+@Builder
+@Entity
+@Table(name = "users", schema = "public")
+@TypeDef(name = "dmdev", typeClass = JsonBinaryType.class)
+public class User implements Comparable<User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, name = "username")
+    @AttributeOverride(name = "birthday", column = @Column(name = "birthday"))
+    private PersonalInfo personalInfo;
+
+    @Column(unique = true)
     private String username;
+
+    @Type(type = "dmdev")
+    private String info;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Type(type = "jsonb")
-    @Column(name = "info")
-    private String info;
-
-    private PersonalInfo personalInfo;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
+    @JoinColumn(name = "company_id") // company_id
     private Company company;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
     private Profile profile;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
     private List<UserChat> userChats = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "receiver")
+    private List<Payment> payments = new ArrayList<>();
 
     @Override
     public int compareTo(User o) {
-        if (personalInfo.getFirstName().compareTo(o.getPersonalInfo().getFirstName()) == 0) {
-            return personalInfo.getBirthday().getBirthDay().compareTo(o.getPersonalInfo().getBirthday().getBirthDay());
-        }
-        return personalInfo.getFirstName().compareTo(o.getPersonalInfo().getFirstName()) > 0 ? -1 : 1;
+        return username.compareTo(o.username);
+    }
+
+    public String fullName() {
+        return getPersonalInfo().getFirstName() + " " + getPersonalInfo().getLastName();
     }
 
 }

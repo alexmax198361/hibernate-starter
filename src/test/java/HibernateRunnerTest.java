@@ -2,7 +2,6 @@ import entity.*;
 import lombok.Cleanup;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.junit.jupiter.api.Test;
 import util.HibernateTestUtil;
 import util.HibernateUtil;
@@ -15,10 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
@@ -36,11 +32,10 @@ class HibernateRunnerTest {
                 .build();
         session.save(yandex);
 
-        Programmer sazanovich = Programmer.builder()
+        User sazanovich = User.builder()
                 .company(yandex)
                 .role(Role.USER)
                 .username("sazanovich")
-                .language(Language.JAVA)
                 .build();
 
 
@@ -52,9 +47,8 @@ class HibernateRunnerTest {
 
         session.save(sazanovich);
 
-        Manager minaeva = Manager.builder()
+        User minaeva = User.builder()
                 .company(yandex)
-                .projectName("EXON")
                 .username("minaeva")
                 .role(Role.USER)
                 .build();
@@ -83,17 +77,17 @@ class HibernateRunnerTest {
             session.persist(getCompany);
         }
 
-        User userSazanovich = Programmer.builder()
+        User userSazanovich = User.builder()
                 .username("sazanovich83av")
                 .role(Role.ADMIN)
                 .build();
         userSazanovich.setPersonalInfo(PersonalInfo.builder()
                 .lastName("Сазанович")
                 .firstName("Александр")
-                .birthday(new BirthDay(LocalDate.of(1983, 11, 15)))
+                .birthday(new Birthday(LocalDate.of(1983, 11, 15)))
                 .build());
 
-        User userMandrik = Programmer.builder()
+        User userMandrik = User.builder()
                 .username("lasthero1987")
                 .role(Role.USER)
                 .build();
@@ -101,16 +95,16 @@ class HibernateRunnerTest {
         userMandrik.setPersonalInfo(PersonalInfo.builder()
                 .lastName("Мандрик")
                 .firstName("Антон")
-                .birthday(new BirthDay(LocalDate.of(1987, 9, 14)))
+                .birthday(new Birthday(LocalDate.of(1987, 9, 14)))
                 .build());
 
-        User userMinaeva = Manager.builder()
+        User userMinaeva = User.builder()
                 .username("minaevaMarina")
 
                 .personalInfo(PersonalInfo.builder()
                         .lastName("Минаева")
                         .firstName("Марина")
-                        .birthday(new BirthDay(LocalDate.of(1997, 7, 20)))
+                        .birthday(new Birthday(LocalDate.of(1997, 7, 20)))
                         .build())
                 .role(Role.USER)
                 .build();

@@ -1,6 +1,7 @@
 package entity;
 
-import converter.BirthDayConverter;
+
+import converter.BirthdayConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +22,7 @@ public class PersonalInfo {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    @Convert(converter = BirthDayConverter.class)
-    private BirthDay birthday;
+    @Convert(converter = BirthdayConverter.class)
+    private Birthday birthday;
 
 }
