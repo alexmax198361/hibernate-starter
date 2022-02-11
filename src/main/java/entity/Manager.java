@@ -4,12 +4,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @Entity
+@DiscriminatorValue("manager")
 public class Manager extends User {
 
     private String projectName;

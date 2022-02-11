@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @Entity
 @NoArgsConstructor
+@DiscriminatorValue("programmer")
 public class Programmer extends User {
 
     @Enumerated(EnumType.STRING)
