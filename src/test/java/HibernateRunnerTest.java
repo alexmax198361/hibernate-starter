@@ -30,6 +30,28 @@ class HibernateRunnerTest {
                 .name("Yandex")
                 .build();
         session.save(yandex);
+
+        Programmer sazanovich = Programmer.builder()
+                .company(yandex)
+                .role(Role.USER)
+                .username("sazanovich")
+                .language(Language.JAVA)
+                .build();
+        session.save(sazanovich);
+
+        Manager minaeva = Manager.builder()
+                .company(yandex)
+                .projectName("EXON")
+                .username("minaeva")
+                .role(Role.USER)
+                .build();
+        session.save(minaeva);
+        session.flush();
+
+        Programmer programmer = session.get(Programmer.class, 1L);
+        User user = session.get(User.class, 2L);
+        System.out.println();
+
         session.getTransaction().commit();
     }
 
@@ -49,7 +71,7 @@ class HibernateRunnerTest {
             session.persist(getCompany);
         }
 
-        User userSazanovich = User.builder()
+        User userSazanovich = Programmer.builder()
                 .username("sazanovich83av")
                 .role(Role.ADMIN)
                 .build();
@@ -59,7 +81,7 @@ class HibernateRunnerTest {
                 .birthday(new BirthDay(LocalDate.of(1983, 11, 15)))
                 .build());
 
-        User userMandrik = User.builder()
+        User userMandrik = Programmer.builder()
                 .username("lasthero1987")
                 .role(Role.USER)
                 .build();
@@ -70,7 +92,7 @@ class HibernateRunnerTest {
                 .birthday(new BirthDay(LocalDate.of(1987, 9, 14)))
                 .build());
 
-        User userMinaeva = User.builder()
+        User userMinaeva = Manager.builder()
                 .username("minaevaMarina")
 
                 .personalInfo(PersonalInfo.builder()
@@ -168,9 +190,7 @@ class HibernateRunnerTest {
 
     @Test
     public void checkAnatation() throws IllegalAccessException, SQLException {
-        User user = User.builder()
-                .username("ivan@gmail.com")
-                .build();
+        User user = null;
 
         String sql = """
                 INSERT INTO %s

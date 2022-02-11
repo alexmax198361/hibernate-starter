@@ -11,15 +11,15 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 @ToString(exclude = {"company", "profile", "userChats"})
 @EqualsAndHashCode(of = "username")
 @Table(name = "users")
-public class User implements Comparable<User> {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class User implements Comparable<User> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column(unique = true, name = "username")
@@ -28,9 +28,9 @@ public class User implements Comparable<User> {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-//    @Type(type = "jsonb")
-//    @Column(name = "info")
-//    private String info;
+    @Type(type = "jsonb")
+    @Column(name = "info")
+    private String info;
 
     private PersonalInfo personalInfo;
 
@@ -42,7 +42,6 @@ public class User implements Comparable<User> {
     private Profile profile;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @Builder.Default
     private List<UserChat> userChats = new ArrayList<>();
 
     @Override
