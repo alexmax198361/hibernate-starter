@@ -2,6 +2,7 @@ import entity.*;
 import lombok.Cleanup;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.junit.jupiter.api.Test;
 import util.HibernateTestUtil;
 import util.HibernateUtil;
@@ -14,6 +15,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
@@ -37,6 +42,14 @@ class HibernateRunnerTest {
                 .username("sazanovich")
                 .language(Language.JAVA)
                 .build();
+
+
+        PersonalInfo personalInfo = PersonalInfo.builder()
+                .firstName("Alex")
+                .lastName("Sazanovich")
+                .build();
+        sazanovich.setPersonalInfo(personalInfo);
+
         session.save(sazanovich);
 
         Manager minaeva = Manager.builder()
@@ -48,9 +61,8 @@ class HibernateRunnerTest {
         session.save(minaeva);
         session.flush();
         session.clear();
-        Programmer programmer = session.get(Programmer.class, 1L);
-        User user = session.get(User.class, 2L);
-        System.out.println();
+        List<User> list = session.createQuery("select u from User u where u.personalInfo.firstName = :firstName", User.class)
+                .setParameter("firstName", "Alex").list();
 
         session.getTransaction().commit();
     }
