@@ -47,7 +47,7 @@ class HibernateRunnerTest {
                 .build();
         session.save(minaeva);
         session.flush();
-
+        session.clear();
         Programmer programmer = session.get(Programmer.class, 1L);
         User user = session.get(User.class, 2L);
         System.out.println();

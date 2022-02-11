@@ -6,12 +6,13 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @Entity
-@DiscriminatorValue("manager")
+@PrimaryKeyJoinColumn(name = "id")
 public class Manager extends User {
 
     private String projectName;

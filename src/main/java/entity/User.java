@@ -15,8 +15,7 @@ import java.util.List;
 @ToString(exclude = {"company", "profile", "userChats"})
 @EqualsAndHashCode(of = "username")
 @Table(name = "users")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "type")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class User implements Comparable<User> {
 
     @Id
