@@ -233,4 +233,9 @@ class HibernateRunnerTest {
         session.getTransaction().commit();
     }
 
+    @Test
+    public void testPredicate() {
+
+    }
+
 }

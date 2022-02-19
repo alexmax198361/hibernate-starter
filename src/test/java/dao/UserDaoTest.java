@@ -1,5 +1,6 @@
 package dao;
 
+import dto.CompanyDto;
 import entity.Payment;
 import entity.User;
 import lombok.Cleanup;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 class UserDaoTest {
 
     private final SessionFactory sessionFactory = HibernateTestUtil.buildSessionFactory();
-    private final UserDao userDao = UserDao.getInstance();
+    private final UserDaoCriteria userDao = UserDaoCriteria.getInstance();
 
     @BeforeAll
     public void initDb() {
@@ -120,13 +121,13 @@ class UserDaoTest {
         @Cleanup Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        List<Object[]> results = userDao.findCompanyNamesWithAvgUserPaymentsOrderedByCompanyName(session);
+        List<CompanyDto> results = userDao.findCompanyNamesWithAvgUserPaymentsOrderedByCompanyName(session);
         assertThat(results).hasSize(3);
 
-        List<String> orgNames = results.stream().map(a -> (String) a[0]).collect(toList());
+        List<String> orgNames = results.stream().map(CompanyDto::getCompanyName).collect(toList());
         assertThat(orgNames).contains("Apple", "Google", "Microsoft");
 
-        List<Double> orgAvgPayments = results.stream().map(a -> (Double) a[1]).collect(toList());
+        List<Double> orgAvgPayments = results.stream().map(CompanyDto::getAmount).collect(toList());
         assertThat(orgAvgPayments).contains(410.0, 400.0, 300.0);
 
         session.getTransaction().commit();
