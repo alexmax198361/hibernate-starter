@@ -2,11 +2,12 @@ package entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.*;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -56,11 +57,12 @@ public class User implements Comparable<User> {
 
     @Builder.Default
     @OneToMany(mappedBy = "user")
+    @Fetch(FetchMode.SUBSELECT)
     private List<UserChat> userChats = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "receiver")
-    @BatchSize(size = 3)
+    @Fetch(FetchMode.SUBSELECT)
     private List<Payment> payments = new ArrayList<>();
 
     @Override
