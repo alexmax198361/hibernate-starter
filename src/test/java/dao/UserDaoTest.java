@@ -2,6 +2,7 @@ package dao;
 
 import com.querydsl.core.Tuple;
 import dto.CompanyDto;
+import dto.PaymentFilter;
 import entity.Payment;
 import entity.PersonalInfo;
 import entity.User;
@@ -113,7 +114,7 @@ class UserDaoTest {
         @Cleanup Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        Double averagePaymentAmount = userDao.findAveragePaymentAmountByFirstAndLastNames(session, "Bill", "Gates");
+        Double averagePaymentAmount = userDao.findAveragePaymentAmountByFirstAndLastNames(session, new PaymentFilter("Bill", "Gates"));
         assertThat(averagePaymentAmount).isEqualTo(300.0);
 
         session.getTransaction().commit();

@@ -1,11 +1,14 @@
 package dao;
 
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
+import dto.PaymentFilter;
 import entity.Payment;
 import entity.User;
 import org.hibernate.Session;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static entity.QCompany.company;
@@ -74,12 +77,18 @@ public class UserDaoDsl {
     /**
      * Возвращает среднюю зарплату сотрудника с указанными именем и фамилией
      */
-    public Double findAveragePaymentAmountByFirstAndLastNames(Session session, String firstName, String lastName) {
+    public Double findAveragePaymentAmountByFirstAndLastNames(Session session, PaymentFilter paymentFilter) {
+
+        QPredicate qPredicate = QPredicate.builder()
+                .add(paymentFilter.getFirstname(), user.personalInfo.firstName::eq)
+                .add(paymentFilter.getLastname(), user.personalInfo.lastName::eq);
+
+
         return new JPAQuery<Double>()
                 .select(payment.amount.avg())
                 .from(payment)
                 .join(payment.receiver, user)
-                .where(user.personalInfo.firstName.eq(firstName).and(user.personalInfo.lastName.eq(lastName)))
+                .where(qPredicate.buildAnd())
                 .fetchOne();
     }
 
