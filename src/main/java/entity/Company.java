@@ -1,6 +1,7 @@
 package entity;
 
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.SortNatural;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.*;
 @Builder
 @EqualsAndHashCode(exclude = "users")
 @ToString(exclude = "users")
+@BatchSize(size = 3)
 public class Company {
 
     @Id

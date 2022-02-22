@@ -2,12 +2,15 @@ package entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @NamedQuery(name = "findUserByName", query = "select u from User u " +
         "left join u.company c " +
@@ -17,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "username")
-@ToString(exclude = {"company", "profile", "userChats", "payments"})
+@ToString(exclude = {"company", "userChats", "payments"})
 @Builder
 @Entity
 @Table(name = "users", schema = "public")
@@ -44,12 +47,12 @@ public class User implements Comparable<User> {
     @JoinColumn(name = "company_id") // company_id
     private Company company;
 
-    @OneToOne(
-            mappedBy = "user",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
-    )
-    private Profile profile;
+//    @OneToOne(
+    //     mappedBy = "user",
+    //         cascade = CascadeType.ALL,
+    //       fetch = FetchType.LAZY
+    //   )
+//    private Profile profile;
 
     @Builder.Default
     @OneToMany(mappedBy = "user")
@@ -57,6 +60,7 @@ public class User implements Comparable<User> {
 
     @Builder.Default
     @OneToMany(mappedBy = "receiver")
+    @BatchSize(size = 3)
     private List<Payment> payments = new ArrayList<>();
 
     @Override
