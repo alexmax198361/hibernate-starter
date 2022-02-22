@@ -1,14 +1,12 @@
 package dao;
 
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import dto.PaymentFilter;
 import entity.Payment;
 import entity.User;
 import org.hibernate.Session;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static entity.QCompany.company;

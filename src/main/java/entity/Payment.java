@@ -22,6 +22,5 @@ public class Payment {
     private Integer amount;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "receiver_id")
     private User receiver;
 }
